@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @SuperBuilder
@@ -15,12 +15,12 @@ public class OptionEntity extends TradeEntity{
 
     String style;
     String strategy;
-    Date deliveryDate;
-    Date expiryDate;
-    Date excerciseStartDate;
+    LocalDate deliveryDate;
+    LocalDate expiryDate;
+    LocalDate excerciseStartDate;
     String payCcy;
     Double premium;
     String premiumCcy;
     String premiumType;
-    Date premiumDate;
+    LocalDate premiumDate;
 }

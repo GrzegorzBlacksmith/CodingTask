@@ -8,13 +8,13 @@ import java.util.List;
 @Getter
 public class ValidationResult {
 
-    private boolean isValid = true;
+    private Boolean isValid = Boolean.TRUE;
     private List<String> messages = new LinkedList<>();
 
     public void addMassages(List<String> messages) {
         this.messages.addAll(messages);
         if (!messages.isEmpty()) {
-            isValid = false;
+            isValid = Boolean.FALSE;
         }
     }
 }

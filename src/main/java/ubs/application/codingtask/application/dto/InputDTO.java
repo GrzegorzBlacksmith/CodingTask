@@ -7,7 +7,7 @@ import lombok.Value;
 import lombok.experimental.NonFinal;
 import ubs.application.codingtask.domain.entity.enums.TradeType;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Value
 @NonFinal
@@ -19,26 +19,26 @@ public class InputDTO {
     TradeType type;
     String direction;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date tradeDate;
+    LocalDate tradeDate;
     Double amount1;
     Double amount2;
     Double rate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date valueDate;
+    LocalDate valueDate;
     String legalEntity;
     String trader;
     String style;
     String strategy;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date deliveryDate;
+    LocalDate deliveryDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date expiryDate;
+    LocalDate expiryDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date excerciseStartDate;
+    LocalDate excerciseStartDate;
     String payCcy;
     Double premium;
     String premiumCcy;
     String premiumType;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date premiumDate;
+    LocalDate premiumDate;
 }

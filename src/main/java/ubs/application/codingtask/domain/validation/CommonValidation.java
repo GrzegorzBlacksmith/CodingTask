@@ -3,64 +3,70 @@ package ubs.application.codingtask.domain.validation;
 import org.springframework.stereotype.Component;
 import ubs.application.codingtask.domain.entity.TradeEntity;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
 public class CommonValidation implements TradeValidation<TradeEntity>{
 
-    private static final List<String> supportedCustomers = Arrays.asList("YODA1", "YODA2");
+    static final List<String> SUPPORTED_CUSTOMERS = Arrays.asList("YODA1", "YODA2");
 
     @Override
     public List<String> validate(TradeEntity entity) {
-        List<String> response = new LinkedList<>();
 
-        validateValueDate(entity, response);
-
-        if (!isCounterPartyInSupportedCustomerList(entity)) {
-            response.add("Customer not supported");
-        }
-
-        if (isCurrencyPairValidISOCodes(entity)) {
-            response.add("Currency Pair not valid ISO code");
-        }
+        List<String> response = new LinkedList<>(validateValueDate(entity));
+        validateIsCounterPartyInSupportedCustomerList(entity).ifPresent(response::add);
+        validateIsCurrencyPairValidISOCodes(entity).ifPresent(response::add);
 
         return response;
     }
 
-    private void validateValueDate(TradeEntity entity, List<String> response) {
+    List<String> validateValueDate(TradeEntity entity) {
+        List<String> messages = new LinkedList<>();
         if (Objects.isNull(entity.getValueDate())) {
-            return;
+            return messages;
         }
 
-        if (entity.getValueDate().before(entity.getTradeDate())) {
-            response.add("Value Date cannot be before trade date");
+        LocalDate tradeDate = entity.getTradeDate();
+        if (Objects.nonNull(tradeDate) && entity.getValueDate().isBefore(tradeDate)) {
+            messages.add(ValidationMessage.VALUE_DATE_CANNOT_BE_BEFORE_TRADE_DATE);
         }
 
         if (isValueDateOnWeekend(entity)) {
-            response.add("Value date cannot be on weekend");
+            messages.add(ValidationMessage.VALUE_DATE_CANNOT_BE_ON_WEEKEND);
         }
+        return messages;
     }
 
     private boolean isValueDateOnWeekend(TradeEntity entity) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(entity.getValueDate());
-        return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
-                cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+        DayOfWeek valueDateDay = entity.getValueDate().getDayOfWeek();
+        return valueDateDay == DayOfWeek.SATURDAY || valueDateDay == DayOfWeek.SUNDAY;
     }
 
-    private boolean isCounterPartyInSupportedCustomerList(TradeEntity entity) {
-        return supportedCustomers.contains(entity.getCustomer());
+    Optional<String> validateIsCounterPartyInSupportedCustomerList(TradeEntity entity) {
+        Optional<String> message = Optional.empty();
+        if (!SUPPORTED_CUSTOMERS.contains(entity.getCustomer())) {
+            message = Optional.of(ValidationMessage.CUSTOMER_NOT_SUPPORTED);
+        }
+        return message;
     }
 
-    private boolean isCurrencyPairValidISOCodes(TradeEntity entity) {
-        String firstCurrency = entity.getCcyPair().substring(0,3);
-        String secondCurrency = entity.getCcyPair().substring(3,4);
+    Optional<String> validateIsCurrencyPairValidISOCodes(TradeEntity entity) {
+        String ccyPair = entity.getCcyPair();
+        if (Objects.isNull(ccyPair) || ccyPair.length()!=6) {
+            return Optional.of(ValidationMessage.CURRENCY_PAIR_NOT_VALID_ISO_CODE);
+        }
+
+        Optional<String> message = Optional.empty();
+        String firstCurrency = ccyPair.substring(0,3);
+        String secondCurrency = ccyPair.substring(3,6);
         try {
             Currency.getInstance(firstCurrency);
             Currency.getInstance(secondCurrency);
         } catch (IllegalArgumentException e) {
-            return false;
+            message = Optional.of(ValidationMessage.CURRENCY_PAIR_NOT_VALID_ISO_CODE);
         }
-        return true;
+        return message;
     }
 }

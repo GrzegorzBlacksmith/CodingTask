@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import ubs.application.codingtask.domain.entity.enums.TradeType;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -17,11 +18,11 @@ public class TradeEntity {
     String ccyPair;
     TradeType type;
     String direction;
-    Date tradeDate;
+    LocalDate tradeDate;
     Double amount1;
     Double amount2;
     Double rate;
     String legalEntity;
     String trader;
-    Date valueDate;
+    LocalDate valueDate;
 }

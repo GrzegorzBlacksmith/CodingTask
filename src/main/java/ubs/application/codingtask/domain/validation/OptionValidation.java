@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ubs.application.codingtask.domain.entity.OptionEntity;
 import ubs.application.codingtask.domain.entity.enums.Style;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -14,28 +15,28 @@ public class OptionValidation implements TradeValidation<OptionEntity>{
         List<String> response = new LinkedList<>();
 
         if (isInvalidISOCode(entity.getPayCcy())) {
-            response.add("Pay Currency not valid ISO code");
+            response.add(ValidationMessage.PAY_CURRENCY_NOT_VALID_ISO_CODE);
         }
         if (isInvalidISOCode(entity.getPremiumCcy())) {
-            response.add("Premium Currency not valid ISO code");
+            response.add(ValidationMessage.PREMIUM_CURRENCY_NOT_VALID_ISO_CODE);
         }
 
         if (!isSupportedOptionStyle(entity)) {
-            response.add("Style can be either American or European");
+            response.add(ValidationMessage.SUPPORTED_AMERICAN_OR_EUROPEAN_STYLE);
         }
 
         if (Style.AMERICAN.equals(Style.valueOf(entity.getStyle()))) {
             if (!isExerciseStartDateBetweenExpiryAndTradeDate(entity)) {
-                response.add("For American option style exercise start date must be between trade date and expiry date");
+                response.add(ValidationMessage.EXCERCISE_DATE_BETWEEN_TRADE_AND_EXPIRY_DATE);
             }
         }
 
-        if (!entity.getExpiryDate().before(entity.getDeliveryDate())) {
-            response.add("Expiry date shall be before delivery date");
+        if (!entity.getExpiryDate().isBefore(entity.getDeliveryDate())) {
+            response.add(ValidationMessage.EXPIRY_DATE_BEFORE_DELIVERY_DATE);
         }
 
-        if (!entity.getPremiumDate().before(entity.getDeliveryDate())) {
-            response.add("Premium date shall be before delivery date");
+        if (!entity.getPremiumDate().isBefore(entity.getDeliveryDate())) {
+            response.add(ValidationMessage.PREMIUM_DATE_BEFORE_DELIVERY_DATE);
         }
 
         return response;
@@ -55,11 +56,11 @@ public class OptionValidation implements TradeValidation<OptionEntity>{
     }
 
     private boolean isExerciseStartDateBetweenExpiryAndTradeDate(OptionEntity entity) {
-        Date exerciseStartDate = entity.getExcerciseStartDate();
+        LocalDate exerciseStartDate = entity.getExcerciseStartDate();
         if (Objects.isNull(exerciseStartDate)) {
             return false;
         }
-        return exerciseStartDate.after(entity.getTradeDate()) &&
-                exerciseStartDate.before(entity.getExpiryDate());
+        return exerciseStartDate.isAfter(entity.getTradeDate()) &&
+                exerciseStartDate.isBefore(entity.getExpiryDate());
     }
 }

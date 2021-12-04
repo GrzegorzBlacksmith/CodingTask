@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @SuperBuilder
@@ -16,15 +16,15 @@ public class OptionDTO extends TradeDTO {
     String style;
     String strategy;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date deliveryDate;
+    LocalDate deliveryDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date expiryDate;
+    LocalDate expiryDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date exerciseStartDate;
+    LocalDate excerciseStartDate;
     String payCcy;
     Double premium;
     String premiumCcy;
     String premiumType;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date premiumDate;
+    LocalDate premiumDate;
 }

@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ValidationDTO {
 
-    boolean isValid;
+    Boolean isValid;
     List<String> messages;
 }

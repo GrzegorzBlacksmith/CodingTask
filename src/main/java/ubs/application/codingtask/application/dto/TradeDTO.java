@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import ubs.application.codingtask.domain.entity.enums.TradeType;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @SuperBuilder
@@ -17,12 +17,12 @@ public class TradeDTO {
     TradeType type;
     String direction;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date tradeDate;
+    LocalDate tradeDate;
     Double amount1;
     Double amount2;
     Double rate;
     String legalEntity;
     String trader;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date valueDate;
+    LocalDate valueDate;
 }
